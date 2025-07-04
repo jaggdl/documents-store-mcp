@@ -164,3 +164,29 @@ config/
 ### Meta-Learning
 • **Reflect on what broke and why** - The specific failure modes teach you what to watch for next time
 • **Document the "why" not just the "what"** - Understanding intent helps with future changes
+
+## Key Learnings for Future Tasks
+
+### Architecture & Design
+• **Business logic belongs in models** - Keep view-specific logic out of helpers/views for better reusability
+• **Design for the consumer** - Consider how end users will interact with the interface when making architectural decisions
+• **Progressive enhancement works** - Build basic functionality first, then add enhancements in logical layers
+
+### Development Process
+• **Use TodoWrite for complex tasks** - Break down multi-step work and track progress systematically
+• **Test each layer before adding complexity** - Validate MVC structure before adding features like markdown rendering
+• **Follow framework conventions** - Rails patterns (nested resources, controller organization) make code predictable
+
+### Tool Integration
+• **Understand tool capabilities before implementing** - Research what frameworks provide (like Tailwind Typography) before writing custom solutions
+• **Security-first for user content** - Always sanitize and validate user-generated content, even in internal tools
+• **Leverage existing solutions** - Use established libraries (Redcarpet, Tailwind Typography) rather than building custom implementations
+
+### Code Quality
+• **Separation of concerns pays off** - Model methods can be reused across multiple views and contexts
+• **Responsive design from the start** - Build with mobile-first, responsive patterns using framework utilities
+• **Plan for reusability** - Methods like `content_preview(length)` with flexible parameters serve multiple use cases
+
+### Meta-Learning
+• **Reflect on architectural decisions** - Good early choices (model-first design) make later enhancements cleaner
+• **Document the "why" not just the "what"** - Understanding intent helps with future modifications
