@@ -1,4 +1,4 @@
-class DocumentEditTool < FastMcp::Tool
+class DocumentEditTool < ApplicationTool
   description "Edit specific lines in a document"
 
   arguments do

@@ -1,4 +1,4 @@
-class ProjectUpdateTool < FastMcp::Tool
+class ProjectUpdateTool < ApplicationTool
   description "Update a project"
 
 

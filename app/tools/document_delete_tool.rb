@@ -1,4 +1,4 @@
-class DocumentDeleteTool < FastMcp::Tool
+class DocumentDeleteTool < ApplicationTool
   description "Delete a document"
 
 

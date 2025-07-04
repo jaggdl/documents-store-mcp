@@ -1,4 +1,4 @@
-class ProjectDeleteTool < FastMcp::Tool
+class ProjectDeleteTool < ApplicationTool
   description "Delete a project and all its documents"
 
 

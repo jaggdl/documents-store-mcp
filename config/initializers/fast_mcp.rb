@@ -21,22 +21,16 @@ FastMcp.mount_in_rails(
   path_prefix: "/mcp",
   messages_route: "messages",
   sse_route: "sse",
-  allowed_origins: [ "*" ],
+  allowed_origins: [ "localhost" ],
 ) do |server|
   Rails.application.config.after_initialize do
-    # Register MCP tools (actions that modify state)
-    server.register_tool(ProjectCreateTool)
-    server.register_tool(ProjectUpdateTool)
-    server.register_tool(ProjectDeleteTool)
-    server.register_tool(DocumentCreateTool)
-    server.register_tool(DocumentEditTool)
-    server.register_tool(DocumentDeleteTool)
-
-    # Register MCP resources (data sharing)
-    server.register_resource(ProjectsResource)
-    server.register_resource(ProjectResource)
-    server.register_resource(DocumentsResource)
-    server.register_resource(DocumentResource)
-    server.register_resource(SearchResource)
+    # FastMcp will automatically discover and register:
+    # - All classes that inherit from ApplicationTool (which uses ActionTool::Base)
+    # - All classes that inherit from ApplicationResource (which uses ActionResource::Base)
+    server.register_tools(*ApplicationTool.descendants)
+    server.register_resources(*ApplicationResource.descendants)
+    # alternatively, you can register tools and resources manually:
+    # server.register_tool(MyTool)
+    # server.register_resource(MyResource)
   end
 end

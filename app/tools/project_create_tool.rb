@@ -1,4 +1,4 @@
-class ProjectCreateTool < FastMcp::Tool
+class ProjectCreateTool < ApplicationTool
   description "Create a new project"
 
   arguments do

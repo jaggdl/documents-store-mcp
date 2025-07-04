@@ -1,4 +1,4 @@
-class DocumentCreateTool < FastMcp::Tool
+class DocumentCreateTool < ApplicationTool
   description "Create a new document in markdown format"
 
 
