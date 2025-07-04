@@ -21,13 +21,18 @@ class DocumentEditToolTest < ActiveSupport::TestCase
     assert_equal "Updated Title", @document.title
   end
 
-  test "should edit specific lines" do
-    line_edits = {
-      "2" => "Modified Line 2",
-      "4" => "Modified Line 4"
-    }
+  test "should edit specific lines using diff" do
+    diff = <<~DIFF
+      @@ -1,4 +1,4 @@
+       Line 1
+      -Line 2
+      +Modified Line 2
+       Line 3
+      -Line 4
+      +Modified Line 4
+    DIFF
 
-    result = @tool.call(document_id: @document.id, line_edits: line_edits)
+    result = @tool.call(document_id: @document.id, diff: diff)
 
     expected_content = "Line 1\nModified Line 2\nLine 3\nModified Line 4"
     assert_equal expected_content, result[:content]
@@ -36,8 +41,17 @@ class DocumentEditToolTest < ActiveSupport::TestCase
     assert_equal expected_content, @document.content
   end
 
-  test "should prepend content" do
-    result = @tool.call(document_id: @document.id, prepend_content: "New First Line")
+  test "should prepend content using diff" do
+    diff = <<~DIFF
+      @@ -1,4 +1,5 @@
+      +New First Line
+       Line 1
+       Line 2
+       Line 3
+       Line 4
+    DIFF
+
+    result = @tool.call(document_id: @document.id, diff: diff)
 
     expected_content = "New First Line\nLine 1\nLine 2\nLine 3\nLine 4"
     assert_equal expected_content, result[:content]
@@ -46,8 +60,17 @@ class DocumentEditToolTest < ActiveSupport::TestCase
     assert_equal expected_content, @document.content
   end
 
-  test "should append content" do
-    result = @tool.call(document_id: @document.id, append_content: "New Last Line")
+  test "should append content using diff" do
+    diff = <<~DIFF
+      @@ -1,4 +1,5 @@
+       Line 1
+       Line 2
+       Line 3
+       Line 4
+      +New Last Line
+    DIFF
+
+    result = @tool.call(document_id: @document.id, diff: diff)
 
     expected_content = "Line 1\nLine 2\nLine 3\nLine 4\nNew Last Line"
     assert_equal expected_content, result[:content]
@@ -57,12 +80,21 @@ class DocumentEditToolTest < ActiveSupport::TestCase
   end
 
   test "should handle multiple operations together" do
+    diff = <<~DIFF
+      @@ -1,4 +1,6 @@
+      +New First Line
+       Line 1
+      -Line 2
+      +Modified Line 2
+       Line 3
+       Line 4
+      +New Last Line
+    DIFF
+
     result = @tool.call(
       document_id: @document.id,
       title: "Updated Title",
-      line_edits: { "2" => "Modified Line 2" },
-      prepend_content: "New First Line",
-      append_content: "New Last Line"
+      diff: diff
     )
 
     expected_content = "New First Line\nLine 1\nModified Line 2\nLine 3\nLine 4\nNew Last Line"
@@ -89,7 +121,13 @@ class DocumentEditToolTest < ActiveSupport::TestCase
   test "should handle minimal document content" do
     @document.update!(content: ".")
 
-    result = @tool.call(document_id: @document.id, append_content: "First line")
+    diff = <<~DIFF
+      @@ -1,1 +1,2 @@
+       .
+      +First line
+    DIFF
+
+    result = @tool.call(document_id: @document.id, diff: diff)
 
     assert_equal ".\nFirst line", result[:content]
   end
@@ -97,8 +135,13 @@ class DocumentEditToolTest < ActiveSupport::TestCase
   test "should handle line edits on minimal document" do
     @document.update!(content: ".")
 
-    line_edits = { "1" => "New line" }
-    result = @tool.call(document_id: @document.id, line_edits: line_edits)
+    diff = <<~DIFF
+      @@ -1,1 +1,1 @@
+      -.
+      +New line
+    DIFF
+
+    result = @tool.call(document_id: @document.id, diff: diff)
 
     assert_equal "New line", result[:content]
   end
@@ -136,15 +179,33 @@ class DocumentEditToolTest < ActiveSupport::TestCase
   test "should handle single line document" do
     @document.update!(content: "Single line")
 
-    result = @tool.call(document_id: @document.id, line_edits: { "1" => "Modified single line" })
+    diff = <<~DIFF
+      @@ -1,1 +1,1 @@
+      -Single line
+      +Modified single line
+    DIFF
+
+    result = @tool.call(document_id: @document.id, diff: diff)
 
     assert_equal "Modified single line", result[:content]
   end
 
-  test "should handle line numbers beyond document length" do
-    line_edits = { "10" => "Line beyond end" }
+  test "should handle adding lines beyond document length" do
+    diff = <<~DIFF
+      @@ -1,4 +1,10 @@
+       Line 1
+       Line 2
+       Line 3
+       Line 4
+      +
+      +
+      +
+      +
+      +
+      +Line beyond end
+    DIFF
 
-    result = @tool.call(document_id: @document.id, line_edits: line_edits)
+    result = @tool.call(document_id: @document.id, diff: diff)
 
     lines = result[:content].split("\n")
     assert_equal 10, lines.length
