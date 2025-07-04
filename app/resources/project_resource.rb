@@ -1,8 +1,8 @@
 class ProjectResource < ApplicationResource
-  uri 'projects/{id}'
-  resource_name 'Project'
-  description 'Individual project by ID'
-  mime_type 'application/json'
+  uri "projects/{id}"
+  resource_name "Project"
+  description "Individual project by ID"
+  mime_type "application/json"
 
   def content(uri = nil)
     project_id = extract_id_from_uri(uri)
@@ -23,6 +23,6 @@ class ProjectResource < ApplicationResource
 
   def extract_id_from_uri(uri_param = nil)
     actual_uri = uri_param || uri || self.class.uri
-    actual_uri.split('/').last.to_i
+    actual_uri.split("/").last.to_i
   end
 end

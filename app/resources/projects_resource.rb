@@ -1,8 +1,8 @@
 class ProjectsResource < ApplicationResource
-  uri 'projects'
-  resource_name 'Projects'
-  description 'All projects in the document store'
-  mime_type 'application/json'
+  uri "projects"
+  resource_name "Projects"
+  description "All projects in the document store"
+  mime_type "application/json"
 
   def content
     projects = Project.all

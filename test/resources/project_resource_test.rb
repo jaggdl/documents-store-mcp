@@ -12,7 +12,7 @@ class ProjectResourceTest < ActiveSupport::TestCase
   test "should return project with correct structure" do
     content = @resource.content("projects/#{@project.id}")
     project = JSON.parse(content)
-    
+
     assert_equal @project.id, project["id"]
     assert_equal @project.name, project["name"]
     assert_equal @project.description, project["description"]
@@ -24,24 +24,24 @@ class ProjectResourceTest < ActiveSupport::TestCase
   test "should return error for non-existent project" do
     content = @resource.content("projects/99999")
     result = JSON.parse(content)
-    
+
     assert_equal "Project not found", result["error"]
   end
 
   test "should handle project with no documents" do
     @document.destroy
-    
+
     content = @resource.content("projects/#{@project.id}")
     project = JSON.parse(content)
-    
+
     assert_equal 0, project["documents_count"]
   end
 
   test "should have correct resource metadata" do
-    assert_equal 'projects/{id}', @resource.class.uri
-    assert_equal 'Project', @resource.class.resource_name
-    assert_equal 'Individual project by ID', @resource.class.description
-    assert_equal 'application/json', @resource.class.mime_type
+    assert_equal "projects/{id}", @resource.class.uri
+    assert_equal "Project", @resource.class.resource_name
+    assert_equal "Individual project by ID", @resource.class.description
+    assert_equal "application/json", @resource.class.mime_type
   end
 
   test "should extract id from uri correctly" do

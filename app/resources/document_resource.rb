@@ -1,8 +1,8 @@
 class DocumentResource < ApplicationResource
-  uri 'documents/{id}'
-  resource_name 'Document'
-  description 'Individual document by ID'
-  mime_type 'application/json'
+  uri "documents/{id}"
+  resource_name "Document"
+  description "Individual document by ID"
+  mime_type "application/json"
 
   def content(uri = nil)
     document_id = extract_id_from_uri(uri)
@@ -26,6 +26,6 @@ class DocumentResource < ApplicationResource
 
   def extract_id_from_uri(uri_param = nil)
     actual_uri = uri_param || uri || self.class.uri
-    actual_uri.split('/').last.to_i
+    actual_uri.split("/").last.to_i
   end
 end

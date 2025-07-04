@@ -11,22 +11,22 @@ class DocumentEditTool < ApplicationTool
 
   def call(document_id:, title: nil, line_edits: nil, append_content: nil, prepend_content: nil)
     document = Document.includes(:project).find(document_id)
-    
+
     document.update!(title: title) if title
-    
+
     if line_edits || append_content || prepend_content
       lines = document.content.split("\n")
-      
+
       line_edits&.each do |line_num, new_content|
         lines[line_num.to_i - 1] = new_content
       end
-      
+
       lines.prepend(prepend_content) if prepend_content
       lines.append(append_content) if append_content
-      
+
       document.update!(content: lines.join("\n"))
     end
-    
+
     {
       id: document.id,
       title: document.title,

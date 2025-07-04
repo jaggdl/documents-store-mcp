@@ -12,7 +12,7 @@ class DocumentResourceTest < ActiveSupport::TestCase
   test "should return document with correct structure" do
     content = @resource.content("documents/#{@document.id}")
     document = JSON.parse(content)
-    
+
     assert_equal @document.id, document["id"]
     assert_equal @document.title, document["title"]
     assert_equal @document.content, document["content"]
@@ -25,24 +25,24 @@ class DocumentResourceTest < ActiveSupport::TestCase
   test "should return error for non-existent document" do
     content = @resource.content("documents/99999")
     result = JSON.parse(content)
-    
+
     assert_equal "Document not found", result["error"]
   end
 
   test "should include project information" do
     content = @resource.content("documents/#{@document.id}")
     document = JSON.parse(content)
-    
+
     assert_not_nil document["project"]
     assert_equal @project.id, document["project"]["id"]
     assert_equal @project.name, document["project"]["name"]
   end
 
   test "should have correct resource metadata" do
-    assert_equal 'documents/{id}', @resource.class.uri
-    assert_equal 'Document', @resource.class.resource_name
-    assert_equal 'Individual document by ID', @resource.class.description
-    assert_equal 'application/json', @resource.class.mime_type
+    assert_equal "documents/{id}", @resource.class.uri
+    assert_equal "Document", @resource.class.resource_name
+    assert_equal "Individual document by ID", @resource.class.description
+    assert_equal "application/json", @resource.class.mime_type
   end
 
   test "should extract id from uri correctly" do

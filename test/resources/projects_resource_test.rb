@@ -14,9 +14,9 @@ class ProjectsResourceTest < ActiveSupport::TestCase
   test "should return all projects with correct structure" do
     content = @resource.content
     projects = JSON.parse(content)
-    
+
     assert_equal 2, projects.length
-    
+
     project = projects.find { |p| p["id"] == @project1.id }
     assert_not_nil project
     assert_equal @project1.name, project["name"]
@@ -28,26 +28,26 @@ class ProjectsResourceTest < ActiveSupport::TestCase
 
   test "should return empty array when no projects exist" do
     Project.destroy_all
-    
+
     content = @resource.content
     projects = JSON.parse(content)
-    
+
     assert_equal [], projects
   end
 
   test "should handle projects with no documents" do
     content = @resource.content
     projects = JSON.parse(content)
-    
+
     project = projects.find { |p| p["id"] == @project2.id }
     assert_not_nil project
     assert_equal 0, project["documents_count"]
   end
 
   test "should have correct resource metadata" do
-    assert_equal 'projects', @resource.class.uri
-    assert_equal 'Projects', @resource.class.resource_name
-    assert_equal 'All projects in the document store', @resource.class.description
-    assert_equal 'application/json', @resource.class.mime_type
+    assert_equal "projects", @resource.class.uri
+    assert_equal "Projects", @resource.class.resource_name
+    assert_equal "All projects in the document store", @resource.class.description
+    assert_equal "application/json", @resource.class.mime_type
   end
 end

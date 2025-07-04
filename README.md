@@ -92,7 +92,7 @@ rails server -p 8347
 
 2. Add the MCP server to Claude Code:
 ```bash
-claude mcp add document-store --transport http http://localhost:8347/mcp
+claude mcp add document-store --transport http http://localhost:8347/mcp/sse
 ```
 
 ### Remote Server

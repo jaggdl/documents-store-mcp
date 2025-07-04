@@ -14,9 +14,9 @@ class DocumentsResourceTest < ActiveSupport::TestCase
   test "should return all documents with correct structure" do
     content = @resource.content
     documents = JSON.parse(content)
-    
+
     assert_equal 2, documents.length
-    
+
     document = documents.find { |d| d["id"] == @document1.id }
     assert_not_nil document
     assert_equal @document1.title, document["title"]
@@ -29,17 +29,17 @@ class DocumentsResourceTest < ActiveSupport::TestCase
 
   test "should return empty array when no documents exist" do
     Document.destroy_all
-    
+
     content = @resource.content
     documents = JSON.parse(content)
-    
+
     assert_equal [], documents
   end
 
   test "should include project information for each document" do
     content = @resource.content
     documents = JSON.parse(content)
-    
+
     documents.each do |document|
       assert_not_nil document["project"]
       assert_not_nil document["project"]["id"]
@@ -48,9 +48,9 @@ class DocumentsResourceTest < ActiveSupport::TestCase
   end
 
   test "should have correct resource metadata" do
-    assert_equal 'documents', @resource.class.uri
-    assert_equal 'Documents', @resource.class.resource_name
-    assert_equal 'All documents in the document store', @resource.class.description
-    assert_equal 'application/json', @resource.class.mime_type
+    assert_equal "documents", @resource.class.uri
+    assert_equal "Documents", @resource.class.resource_name
+    assert_equal "All documents in the document store", @resource.class.description
+    assert_equal "application/json", @resource.class.mime_type
   end
 end

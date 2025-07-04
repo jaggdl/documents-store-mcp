@@ -1,8 +1,8 @@
 class DocumentsResource < ApplicationResource
-  uri 'documents'
-  resource_name 'Documents'
-  description 'All documents in the document store'
-  mime_type 'application/json'
+  uri "documents"
+  resource_name "Documents"
+  description "All documents in the document store"
+  mime_type "application/json"
 
   def content
     documents = Document.includes(:project).all
