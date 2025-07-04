@@ -134,18 +134,33 @@ config/
 
 ## General Development Learnings
 
+### Architecture & Design
+• **Understand the domain model first** - Know what's for reading vs writing before choosing implementation patterns
+• **Follow framework conventions** - Don't fight the intended usage patterns (Tools for actions, Resources for data)
+• **Design for the consumer** - Consider how the end user (human or AI) will actually interact with the interface
 • **Token efficiency matters** - Design APIs that minimize data transfer, especially when LLMs are the primary consumers
-
-• **Keep registrations in sync** - When deleting components, check all configuration files that reference them
-
-• **Test edge cases early** - Model validations and constraints often break assumptions in tests
-
-• **Design for the consumer** - Consider how the end user (LLM) will actually use the interface, not just what's technically possible
-
-• **Start simple, add complexity later** - Line-based editing beats full diff systems for most use cases
-
-• **Error messages should be actionable** - Clear error handling improves the developer experience significantly
-
 • **Single responsibility in tools** - One tool should do one thing well, even if it means more tools overall
 
+### Testing Strategy  
+• **Test framework syntax matters** - Don't assume testing patterns transfer between frameworks (RSpec vs Minitest)
+• **Isolate test state early** - Add proper setup/teardown before tests get complex and interdependent
+• **Run tests incrementally** - Validate each change rather than debugging large broken changesets
+• **Test edge cases early** - Model validations and constraints often break assumptions in tests
 • **Test the integration, not just the unit** - MCP tools need testing at the protocol level, not just the Ruby class level
+
+### Development Process
+• **Use the right tool for the job** - Task tool for searches/exploration, direct tools for known operations
+• **Let error messages guide you** - Systematic debugging beats guessing when you have clear failure messages
+• **Keep related files organized** - Parallel directory structures make navigation and maintenance easier
+• **Keep registrations in sync** - When deleting components, check all configuration files that reference them
+• **Start simple, add complexity later** - Line-based editing beats full diff systems for most use cases
+
+### Code Patterns
+• **Build in flexibility for different contexts** - Methods may need to work in production and test environments differently
+• **Provide sensible fallbacks** - `param || fallback1 || fallback2` patterns handle edge cases gracefully
+• **Consolidate configuration** - Keep related registrations/setup in one discoverable place
+• **Error messages should be actionable** - Clear error handling improves the developer experience significantly
+
+### Meta-Learning
+• **Reflect on what broke and why** - The specific failure modes teach you what to watch for next time
+• **Document the "why" not just the "what"** - Understanding intent helps with future changes

@@ -12,28 +12,31 @@
 
 # Mount the MCP middleware in your Rails application
 # You can customize the options below to fit your needs.
-require 'fast_mcp'
+require "fast_mcp"
 
 FastMcp.mount_in_rails(
   Rails.application,
-  name: 'document-store-mcp',
-  version: '1.0.0',
-  path_prefix: '/mcp',
-  messages_route: 'messages',
-  sse_route: 'sse'
+  name: "document-store-mcp",
+  version: "1.0.0",
+  path_prefix: "/mcp",
+  messages_route: "messages",
+  sse_route: "sse",
+  allowed_origins: [ "*" ],
 ) do |server|
   Rails.application.config.after_initialize do
-    # Register all our MCP tools
+    # Register MCP tools (actions that modify state)
     server.register_tool(ProjectCreateTool)
-    server.register_tool(ProjectListTool)
-    server.register_tool(ProjectReadTool)
     server.register_tool(ProjectUpdateTool)
     server.register_tool(ProjectDeleteTool)
     server.register_tool(DocumentCreateTool)
-    server.register_tool(DocumentListTool)
-    server.register_tool(DocumentReadTool)
     server.register_tool(DocumentEditTool)
     server.register_tool(DocumentDeleteTool)
-    server.register_tool(DocumentSearchTool)
+
+    # Register MCP resources (data sharing)
+    server.register_resource(ProjectsResource)
+    server.register_resource(ProjectResource)
+    server.register_resource(DocumentsResource)
+    server.register_resource(DocumentResource)
+    server.register_resource(SearchResource)
   end
 end

@@ -1,10 +1,12 @@
-class ProjectListTool < FastMcp::Tool
-  description "List all projects"
+class ProjectsResource < ApplicationResource
+  uri 'projects'
+  resource_name 'Projects'
+  description 'All projects in the document store'
+  mime_type 'application/json'
 
-
-  def call
+  def content
     projects = Project.all
-    projects.map do |project|
+    JSON.generate(projects.map do |project|
       {
         id: project.id,
         name: project.name,
@@ -13,6 +15,6 @@ class ProjectListTool < FastMcp::Tool
         created_at: project.created_at,
         updated_at: project.updated_at
       }
-    end
+    end)
   end
 end
