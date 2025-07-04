@@ -71,7 +71,7 @@ rails db:seed
 
 ### Development Mode
 ```bash
-rails server -p 8347
+bin/dev
 ```
 
 The MCP server will be available at `http://localhost:8347/mcp/messages`
@@ -85,9 +85,9 @@ RAILS_ENV=production rails server -p 8347
 
 ### Local Development Server
 
-1. Start the Rails server on port 8347:
+1. Start the Rails server:
 ```bash
-rails server -p 8347
+bin/dev
 ```
 
 2. Add the MCP server to Claude Code:
@@ -202,7 +202,7 @@ config/
 ### Common Issues
 
 1. **Connection refused**: Ensure the Rails server is running on port 8347 and accessible
-2. **Endpoint not found (HTTP 404)**: The server is running but not on the expected port - check that Rails is started with `-p 8347`
+2. **Endpoint not found (HTTP 404)**: The server is running but not on the expected port - check that Rails is started with `bin/dev`
 3. **Tool not found**: Check that all tools are properly registered in `config/initializers/fast_mcp.rb`
 4. **Database errors**: Run `rails db:migrate` to ensure database schema is up to date
 5. **Port conflicts**: If port 8347 is already in use, stop the conflicting process or use a different port
