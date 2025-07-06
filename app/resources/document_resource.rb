@@ -11,6 +11,7 @@ class DocumentResource < ApplicationResource
       id: document.id,
       title: document.title,
       content: document.content,
+      file_path: document.file_path,
       project: {
         id: document.project.id,
         name: document.project.name

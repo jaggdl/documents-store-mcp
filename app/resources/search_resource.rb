@@ -8,7 +8,7 @@ class SearchResource < ApplicationResource
     query = extract_query_from_uri(uri)
     return JSON.generate([]) if query.blank?
 
-    documents = Document.search(query).includes(:project)
+    documents = Document.search(query)
 
     JSON.generate({
       search_query: query,

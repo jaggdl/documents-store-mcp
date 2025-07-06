@@ -6,8 +6,10 @@ class DocumentsResourceTest < ActiveSupport::TestCase
     Document.destroy_all
     @project1 = Project.create!(name: "Test Project 1", description: "Test project 1 description")
     @project2 = Project.create!(name: "Test Project 2", description: "Test project 2 description")
-    @document1 = Document.create!(title: "Doc 1", content: "Content 1", project: @project1)
-    @document2 = Document.create!(title: "Doc 2", content: "Content 2", project: @project2)
+    @document1 = Document.create!(title: "Doc 1", project: @project1)
+    @document1.content = "Content 1"
+    @document2 = Document.create!(title: "Doc 2", project: @project2)
+    @document2.content = "Content 2"
     @resource = DocumentsResource.new
   end
 
@@ -20,7 +22,7 @@ class DocumentsResourceTest < ActiveSupport::TestCase
     document = documents.find { |d| d["id"] == @document1.id }
     assert_not_nil document
     assert_equal @document1.title, document["title"]
-    assert_equal @document1.content, document["content"]
+    assert_equal @document1.file_path, document["file_path"]
     assert_equal @project1.id, document["project"]["id"]
     assert_equal @project1.name, document["project"]["name"]
     assert_not_nil document["created_at"]

@@ -5,9 +5,12 @@ class SearchResourceTest < ActiveSupport::TestCase
     Project.destroy_all
     Document.destroy_all
     @project = Project.create!(name: "Test Project", description: "Test project description")
-    @document1 = Document.create!(title: "Ruby Guide", content: "Learn Ruby programming", project: @project)
-    @document2 = Document.create!(title: "Rails Tutorial", content: "Build web apps with Ruby on Rails", project: @project)
-    @document3 = Document.create!(title: "JavaScript Basics", content: "Frontend development with JS", project: @project)
+    @document1 = Document.create!(title: "Ruby Guide", project: @project)
+    @document1.content = "Learn Ruby programming"
+    @document2 = Document.create!(title: "Rails Tutorial", project: @project)
+    @document2.content = "Build web apps with Ruby on Rails"
+    @document3 = Document.create!(title: "JavaScript Basics", project: @project)
+    @document3.content = "Frontend development with JS"
     @resource = SearchResource.new
   end
 

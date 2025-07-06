@@ -10,8 +10,19 @@ class DocumentCreateTool < ApplicationTool
 
   def call(title:, content:, project_id:)
     project = Project.find(project_id)
-    document = project.documents.create!(title: title, content: content)
-    "Document created with ID #{document.id}"
+    document = project.documents.create!(title: title)
+    document.content = content
+
+    {
+      id: document.id,
+      title: document.title,
+      file_path: document.file_path,
+      absolute_file_path: document.absolute_file_path.to_s,
+      project: {
+        id: project.id,
+        name: project.name
+      }
+    }
   rescue ActiveRecord::RecordNotFound
     raise "Project not found"
   rescue ActiveRecord::RecordInvalid => e

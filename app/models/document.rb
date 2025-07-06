@@ -2,9 +2,29 @@ class Document < ApplicationRecord
   belongs_to :project
 
   validates :title, presence: true
-  validates :content, presence: true
 
-  scope :search, ->(query) { where("title LIKE ? OR content LIKE ?", "%#{query}%", "%#{query}%") }
+  scope :search, ->(query) {
+    all.select { |doc|
+      doc.title.downcase.include?(query.downcase) ||
+      doc.content.downcase.include?(query.downcase)
+    }
+  }
+
+  before_save :generate_file_path, if: :new_record?
+  after_save :ensure_file_exists
+  after_destroy :cleanup_file
+
+  def content
+    return "" unless file_path&.present? && File.exist?(absolute_file_path)
+    File.read(absolute_file_path)
+  end
+
+  def content=(new_content)
+    return unless file_path&.present?
+
+    FileUtils.mkdir_p(File.dirname(absolute_file_path))
+    File.write(absolute_file_path, new_content)
+  end
 
   def content_as_html
     renderer = Redcarpet::Render::HTML.new(
@@ -36,7 +56,34 @@ class Document < ApplicationRecord
     strip_tags(content_as_html).truncate(length)
   end
 
+
+  def absolute_file_path
+    return nil unless file_path
+    Rails.root.join("public", file_path)
+  end
+
   private
+
+  def generate_file_path
+    return if file_path.present?
+
+    safe_title = title.gsub(/[^a-zA-Z0-9\-_]/, "_").downcase
+    filename = "#{safe_title}_#{id || SecureRandom.hex(4)}.md"
+    self.file_path = "documents/#{filename}"
+  end
+
+  def ensure_file_exists
+    return unless file_path.present?
+
+    FileUtils.mkdir_p(File.dirname(absolute_file_path))
+    File.write(absolute_file_path, "") unless File.exist?(absolute_file_path)
+  end
+
+  def cleanup_file
+    return unless file_path.present? && File.exist?(absolute_file_path)
+
+    File.delete(absolute_file_path)
+  end
 
   def strip_tags(html)
     ActionController::Base.helpers.strip_tags(html)

@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_04_051658) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_06_182738) do
   create_table "documents", force: :cascade do |t|
     t.string "title"
-    t.text "content"
     t.integer "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "file_path"
     t.index ["project_id"], name: "index_documents_on_project_id"
   end
 
