@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_06_233045) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_07_002317) do
 # Could not dump table "document_vectors" because of following StandardError
 #   Unknown type 'vector' for column 'embedding'
 
@@ -24,6 +24,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_06_233045) do
     t.index ["project_id"], name: "index_documents_on_project_id"
   end
 
+# Could not dump table "project_vectors" because of following StandardError
+#   Unknown type 'vector' for column 'embedding'
+
+
   create_table "projects", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -33,4 +37,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_06_233045) do
 
   add_foreign_key "document_vectors", "documents"
   add_foreign_key "documents", "projects"
+  add_foreign_key "project_vectors", "projects"
 end
