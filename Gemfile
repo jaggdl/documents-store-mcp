@@ -69,3 +69,7 @@ gem "tailwindcss-ruby", "~> 4.1"
 gem "tailwindcss-rails", "~> 4.2"
 
 gem "redcarpet", "~> 3.6"
+
+gem "sqlite-vec"
+gem "neighbor"
+gem "listen", "~> 3.0"

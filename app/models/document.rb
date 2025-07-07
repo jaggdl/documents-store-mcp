@@ -1,5 +1,6 @@
 class Document < ApplicationRecord
   belongs_to :project
+  has_one :document_vector, dependent: :destroy
 
   validates :title, presence: true
 
@@ -12,6 +13,7 @@ class Document < ApplicationRecord
 
   before_save :generate_file_path, if: :new_record?
   after_save :ensure_file_exists
+  after_commit :generate_embedding
   after_destroy :cleanup_file
 
   def content
@@ -57,6 +59,26 @@ class Document < ApplicationRecord
   end
 
 
+  def self.vector_search(query, limit: 10)
+    return [] unless query.present?
+
+    begin
+      query_embedding = EmbeddingService.generate_embedding(query)
+
+      nearest_vectors = DocumentVector.nearest_neighbors(
+        :embedding,
+        query_embedding,
+        distance: "cosine"
+      ).limit(limit)
+
+      nearest_vectors.includes(:document).map(&:document)
+    rescue => e
+      Rails.logger.error "Vector search error: #{e.message}"
+      []
+    end
+  end
+
+
   def absolute_file_path
     return nil unless file_path
     Rails.root.join("public", file_path)
@@ -87,5 +109,21 @@ class Document < ApplicationRecord
 
   def strip_tags(html)
     ActionController::Base.helpers.strip_tags(html)
+  end
+
+  def generate_embedding
+    return unless content.present?
+
+    begin
+      embedding_vector = EmbeddingService.generate_embedding(content)
+
+      if document_vector
+        document_vector.update!(embedding: embedding_vector)
+      else
+        create_document_vector!(embedding: embedding_vector)
+      end
+    rescue => e
+      Rails.logger.error "Failed to generate embedding for document #{id}: #{e.message}"
+    end
   end
 end
