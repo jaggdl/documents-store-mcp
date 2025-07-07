@@ -31,7 +31,7 @@ class DocumentVectorSearchTool < ApplicationTool
         id: doc.id,
         title: doc.title,
         project_name: doc.project.name,
-        content_preview: doc.content_preview(200),
+        highlights: doc.content_highlights(query, max_highlights: 3, snippet_length: 200),
         file_path: doc.file_path,
         created_at: doc.created_at,
         updated_at: doc.updated_at
