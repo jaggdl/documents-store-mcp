@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  marqo:
+    image: marqoai/marqo:latest
+    ports:
+      - "8882:8882"
+    environment:
+      - MARQO_ENABLE_BATCH_APIS=true
+    volumes:
+      - marqo_data:/opt/vespa/var
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8882/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - app_network
+
+  rails_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - "linux/amd64"
+    ports:
+      - "3000:80"
+    environment:
+      - RAILS_ENV=production
+      - SOLID_QUEUE_IN_PUMA=true
+      - SECRET_KEY_BASE=1
+      - MARQO_URL=http://marqo:8882
+    depends_on:
+      marqo:
+        condition: service_healthy
+    networks:
+      - app_network
+    volumes:
+      - ./db:/rails/db
+      - ./storage:/rails/storage
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  marqo_data:

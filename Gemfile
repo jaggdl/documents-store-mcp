@@ -64,12 +64,9 @@ end
 
 gem "fast-mcp", "~> 1.5"
 
-gem "tailwindcss-ruby", "~> 4.1"
-
-gem "tailwindcss-rails", "~> 4.2"
+gem "tailwindcss-rails", "~> 3.3"
+gem "tailwindcss-ruby", "~> 3.4"
 
 gem "redcarpet", "~> 3.6"
 
-gem "sqlite-vec"
-gem "neighbor"
 gem "listen", "~> 3.0"

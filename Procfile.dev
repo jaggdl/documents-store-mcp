@@ -1,3 +1,2 @@
 web: bin/rails server
 css: bin/rails tailwindcss:watch
-embeddings: cd embedding_service && python app.py
