@@ -22,7 +22,9 @@ class FileWatcherService
 
   def self.handle_file_changes(modified, added, removed)
     (modified + added).each do |file_path|
-      document = Document.find_by(file_path: file_path)
+      relative_path = file_path.sub(Rails.root.join("public").to_s + "/", "")
+      document = Document.find_by(file_path: relative_path)
+
       if document
         document.touch
         Rails.logger.info "Document #{document.id} reindexed due to file change: #{file_path}"
