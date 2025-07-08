@@ -4,16 +4,43 @@ require "json"
 class MarqoService
   MARQO_URL = ENV.fetch("MARQO_URL", "http://localhost:8882")
 
+  class << self
+    def create_indexes
+      create_index(DocumentMarqoIndexing::MARQO_INDEX_NAME, "hf/e5-base-v2")
+      create_index(ProjectMarqoIndexing::MARQO_INDEX_NAME, "hf/e5-base-v2")
+    end
+
+    def create_index(index_name, model)
+      uri = URI("#{MARQO_URL}/indexes/#{index_name}")
+      http = Net::HTTP.new(uri.host, uri.port)
+
+      request = Net::HTTP::Post.new(uri)
+      request["Content-Type"] = "application/json"
+      request.body = {
+        model: model,
+        type: "unstructured",
+        textPreprocessing: {
+          splitLength: 2,
+          splitOverlap: 0,
+          splitMethod: "sentence"
+        }
+      }.to_json
+
+      response = http.request(request)
+
+      if response.code == "200" || response.code == "409"
+        Rails.logger.info "Index #{index_name} created or already exists"
+      else
+        Rails.logger.error "Failed to create index #{index_name}: #{response.body}"
+      end
+    end
+  end
+
   def initialize(index_name = nil)
     @base_url = MARQO_URL
     @index_name = index_name
   end
 
-  def self.create_indexes
-    service = new
-    service.create_index(DocumentMarqoIndexing::MARQO_INDEX_NAME, "hf/e5-base-v2")
-    service.create_index(ProjectMarqoIndexing::MARQO_INDEX_NAME, "hf/e5-base-v2")
-  end
 
   def add_document(document_data, tensor_fields)
     add_documents_to_index(@index_name, [ document_data ], tensor_fields)
@@ -29,30 +56,6 @@ class MarqoService
 
   private
 
-  def create_index(index_name, model)
-    uri = URI("#{@base_url}/indexes/#{index_name}")
-    http = Net::HTTP.new(uri.host, uri.port)
-
-    request = Net::HTTP::Post.new(uri)
-    request["Content-Type"] = "application/json"
-    request.body = {
-      model: model,
-      type: "unstructured",
-      textPreprocessing: {
-        splitLength: 2,
-        splitOverlap: 0,
-        splitMethod: "sentence"
-      }
-    }.to_json
-
-    response = http.request(request)
-
-    if response.code == "200" || response.code == "409"
-      Rails.logger.info "Index #{index_name} created or already exists"
-    else
-      Rails.logger.error "Failed to create index #{index_name}: #{response.body}"
-    end
-  end
 
   def add_documents_to_index(index_name, documents, tensor_fields)
     uri = URI("#{@base_url}/indexes/#{index_name}/documents")
