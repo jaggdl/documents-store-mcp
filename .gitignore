@@ -37,3 +37,5 @@
 !/app/assets/builds/.keep
 
 /public/documents/*
+
+.marqo_cache

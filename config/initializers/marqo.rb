@@ -1,6 +1,6 @@
 Rails.application.config.after_initialize do
-  next if Rails.env.test? || ENV['SKIP_MARQO_INIT']
-  
+  next if Rails.env.test? || ENV["SKIP_MARQO_INIT"]
+
   begin
     marqo_service = MarqoService.new
     marqo_service.create_indexes

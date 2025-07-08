@@ -1,57 +1,30 @@
+require "net/http"
+require "json"
+
 class MarqoService
   MARQO_URL = ENV.fetch("MARQO_URL", "http://localhost:8882")
-  DOCUMENTS_INDEX = "documents-index"
-  PROJECTS_INDEX = "projects-index"
 
-  def initialize
+  def initialize(index_name = nil)
     @base_url = MARQO_URL
+    @index_name = index_name
   end
 
-  def create_indexes
-    create_index(DOCUMENTS_INDEX, "hf/e5-base-v2")
-    create_index(PROJECTS_INDEX, "hf/e5-base-v2")
+  def self.create_indexes
+    service = new
+    service.create_index(DocumentMarqoIndexing::MARQO_INDEX_NAME, "hf/e5-base-v2")
+    service.create_index(ProjectMarqoIndexing::MARQO_INDEX_NAME, "hf/e5-base-v2")
   end
 
-  def add_document(document)
-    doc_data = {
-      "_id" => document.id.to_s,
-      "title" => document.title,
-      "content" => document.content,
-      "file_path" => document.file_path,
-      "project_id" => document.project_id,
-      "created_at" => document.created_at.iso8601,
-      "updated_at" => document.updated_at.iso8601
-    }
-
-    add_documents_to_index(DOCUMENTS_INDEX, [ doc_data ], [ "title", "content" ])
+  def add_document(document_data, tensor_fields)
+    add_documents_to_index(@index_name, [document_data], tensor_fields)
   end
 
-  def add_project(project)
-    project_data = {
-      "_id" => project.id.to_s,
-      "name" => project.name,
-      "description" => project.description,
-      "created_at" => project.created_at.iso8601,
-      "updated_at" => project.updated_at.iso8601
-    }
-
-    add_documents_to_index(PROJECTS_INDEX, [ project_data ], [ "name", "description" ])
-  end
-
-  def search_documents(query, limit: 10)
-    search_index(DOCUMENTS_INDEX, query, limit)
-  end
-
-  def search_projects(query, limit: 10)
-    search_index(PROJECTS_INDEX, query, limit)
+  def search(query, limit: 10)
+    search_index(@index_name, query, limit)
   end
 
   def delete_document(document_id)
-    delete_from_index(DOCUMENTS_INDEX, document_id.to_s)
-  end
-
-  def delete_project(project_id)
-    delete_from_index(PROJECTS_INDEX, project_id.to_s)
+    delete_from_index(@index_name, document_id.to_s)
   end
 
   private
