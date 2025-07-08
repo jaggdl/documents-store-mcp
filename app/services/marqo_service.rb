@@ -16,7 +16,7 @@ class MarqoService
   end
 
   def add_document(document_data, tensor_fields)
-    add_documents_to_index(@index_name, [document_data], tensor_fields)
+    add_documents_to_index(@index_name, [ document_data ], tensor_fields)
   end
 
   def search(query, limit: 10)

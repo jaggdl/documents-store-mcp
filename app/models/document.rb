@@ -21,5 +21,4 @@ class Document < ApplicationRecord
       score: hit["_score"]
     }
   end
-
 end
