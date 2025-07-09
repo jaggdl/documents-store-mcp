@@ -64,8 +64,8 @@ end
 
 gem "fast-mcp", "~> 1.5"
 
-gem "tailwindcss-rails", "~> 3.3"
-gem "tailwindcss-ruby", "~> 3.4"
+gem "tailwindcss-rails", "~> 4.3"
+gem "tailwindcss-ruby", "~> 4.1"
 
 gem "listen", "~> 3.0"
 
