@@ -2,29 +2,15 @@ module DocumentContentProcessing
   extend ActiveSupport::Concern
 
   def content_as_html
-    renderer = Redcarpet::Render::HTML.new(
-      filter_html: true,
-      no_images: false,
-      no_links: false,
-      no_styles: true,
-      safe_links_only: true,
-      with_toc_data: true,
-      hard_wrap: true
-    )
-
-    markdown = Redcarpet::Markdown.new(renderer,
-      autolink: true,
-      tables: true,
-      fenced_code_blocks: true,
-      strikethrough: true,
-      superscript: true,
-      underline: true,
-      highlight: true,
-      quote: true,
-      footnotes: true
-    )
-
-    markdown.render(content).html_safe
+    Commonmarker.to_html(content, options: {
+      parse: { smart: true }
+    },
+      plugins: {
+        syntax_highlighter: {
+          theme: "base16-ocean.dark"
+        }
+      },
+                        ).html_safe
   end
 
   def content_preview(length = 150)
