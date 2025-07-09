@@ -16,5 +16,5 @@ Rails.application.routes.draw do
     resources :documents
   end
 
-  resources :documents, only: [ :show ]
+  resources :documents, only: [ :show, :new, :create ]
 end
