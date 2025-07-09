@@ -3,43 +3,9 @@
     <h1 class="text-3xl font-bold">Projects</h1>
   </div>
 
-  <div class="space-y-2">
+  <div class="space-y-8">
     <% @projects.each do |project| %>
-      <div class="py-4 border-b border-gray-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="text-xl font-semibold">
-              <%= link_to project.name, project, class: "hover:text-indigo-600" %>
-            </h2>
-            <p class="mt-1 text-sm"><%= project.description %></p>
-          </div>
-        </div>
-      </div>
-
-      <% if project.documents.any? %>
-        <h3 class="text-sm font-medium mb-3">Documents</h3>
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <% project.documents.each do |document| %>
-
-            <%= link_to document, class: "hover:text-indigo-600" do %>
-              <div class="rounded-lg p-4 transition-colors">
-                <h4 class="font-medium">
-                  <%= document.title %>
-                </h4>
-                <p class="mt-1 text-sm line-clamp-2">
-                  <%= document.content_preview(100) %>
-                </p>
-              </div>
-            <% end %>
-
-          <% end %>
-
-        </div>
-      <% else %>
-        <div class="px-6 py-4 text-center">
-          <p>No documents yet.</p>
-        </div>
-      <% end %>
+      <%= render 'project_card', project: project %>
     <% end %>
   </div>
 
@@ -59,7 +25,7 @@
             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
           />
         </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">No projects</h3>
+        <h3 class="mt-2 text-sm font-medium">No projects</h3>
       </div>
     </div>
   <% end %>

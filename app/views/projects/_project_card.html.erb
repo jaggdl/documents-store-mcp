@@ -1,0 +1,27 @@
+<div class="space-y-2">
+  <%= link_to project do %>
+    <div
+      class="
+        py-4 border-b border-l-4 border-gray-500 pl-2 hover:border-l-8 transition-all
+      "
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-semibold">
+            <%= project.name %>
+          </h2>
+          <p class="mt-1 text-sm"><%= project.description %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if project.documents.any? %>
+    <h3 class="text-sm font-medium mb-3">Documents</h3>
+    <%= render 'documents/documents_table', documents: project.documents %>
+  <% else %>
+    <div class="px-6 py-4 text-center">
+      <p>No documents yet.</p>
+    </div>
+  <% end %>
+</div>

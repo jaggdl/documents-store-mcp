@@ -1,0 +1,26 @@
+<% if documents.any? %>
+  <table class="w-full border-collapse">
+    <thead>
+      <tr class="border-b border-gray-500 text-xs">
+        <th class="text-left py-2 font-medium">Title</th>
+        <th class="text-left py-2 font-medium">Preview</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% documents.each do |document| %>
+        <tr class="border-b border-gray-500">
+          <td class="py-2">
+            <%= link_to document.title, document, class: "hover:underline" %>
+          </td>
+          <td class="py-2">
+            <%= document.content_preview(100) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class="px-6 py-4 text-center">
+    <p>No documents yet.</p>
+  </div>
+<% end %>
