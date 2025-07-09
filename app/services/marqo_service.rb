@@ -50,6 +50,10 @@ class MarqoService
     search_index(@index_name, query, limit)
   end
 
+  def recommend(document_ids, limit: 10)
+    recommend_from_index(@index_name, document_ids, limit)
+  end
+
   def delete_document(document_id)
     delete_from_index(@index_name, document_id.to_s)
   end
@@ -94,6 +98,28 @@ class MarqoService
       JSON.parse(response.body)
     else
       Rails.logger.error "Failed to search #{index_name}: #{response.body}"
+      { "hits" => [] }
+    end
+  end
+
+  def recommend_from_index(index_name, document_ids, limit)
+    uri = URI("#{@base_url}/indexes/#{index_name}/recommend")
+    http = Net::HTTP.new(uri.host, uri.port)
+
+    request = Net::HTTP::Post.new(uri)
+    request["Content-Type"] = "application/json"
+    request.body = {
+      documents: document_ids,
+      limit: limit,
+      showHighlights: true
+    }.to_json
+
+    response = http.request(request)
+
+    if response.code == "200"
+      JSON.parse(response.body)
+    else
+      Rails.logger.error "Failed to get recommendations from #{index_name}: #{response.body}"
       { "hits" => [] }
     end
   end

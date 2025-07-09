@@ -29,6 +29,26 @@ module VectorSearchable
         results: results
       }
     end
+
+    def self.vector_recommend(document_ids, limit: 10)
+      index_name = new.marqo_index_name
+      marqo_service = MarqoService.new(index_name)
+      recommend_results = marqo_service.recommend(document_ids, limit: limit)
+
+      if recommend_results["hits"].empty?
+        return []
+      end
+
+      recommend_results["hits"].filter_map do |hit|
+        record_id = hit["_id"].to_i
+        next unless record_id > 0
+
+        record = find_by(id: record_id)
+        next unless record
+
+        record
+      end
+    end
   end
 
   def to_search_result(hit)

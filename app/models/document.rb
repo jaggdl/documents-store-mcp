@@ -8,6 +8,13 @@ class Document < ApplicationRecord
 
   validates :title, presence: true
 
+  def project_other_documents
+    project.documents.where.not(id:)
+  end
+
+  def related_documents(limit: 5)
+    self.class.vector_recommend([ id.to_s ], limit:)
+  end
 
   def to_search_result(hit)
     {
