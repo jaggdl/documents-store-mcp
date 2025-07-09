@@ -1,0 +1,34 @@
+<% if breadcrumbs.any? %>
+  <div class="mb-8">
+    <nav class="flex" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-4">
+        <% breadcrumbs.each_with_index do |breadcrumb, index| %>
+          <li>
+            <% if index > 0 %>
+              <div class="flex items-center">
+                <svg class="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <% if breadcrumb.link? %>
+                  <%= link_to breadcrumb.name, breadcrumb.path, class: "ml-4 hover:font-bold" %>
+                <% else %>
+                  <span class="ml-4 font-medium"><%= breadcrumb.name %></span>
+                <% end %>
+              </div>
+            <% else %>
+              <% if breadcrumb.link? %>
+                <%= link_to breadcrumb.name, breadcrumb.path, class: "hover:font-bold" %>
+              <% else %>
+                <span class="font-medium"><%= breadcrumb.name %></span>
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+      </ol>
+    </nav>
+  </div>
+<% end %>

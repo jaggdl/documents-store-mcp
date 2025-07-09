@@ -7,6 +7,9 @@ class DocumentsController < ApplicationController
   end
 
   def show
+    add_breadcrumb("Projects", projects_path)
+    add_breadcrumb(@document.project.name, @document.project)
+    add_breadcrumb(@document.title)
   end
 
   def new

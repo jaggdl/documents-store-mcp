@@ -1,38 +1,4 @@
 <div class="">
-  <div class="mb-8">
-    <nav class="flex" aria-label="Breadcrumb">
-      <ol class="flex items-center space-x-4">
-        <li>
-          <%= link_to "Projects", projects_path, class: "hover:font-bold" %>
-        </li>
-        <li>
-          <div class="flex items-center">
-            <svg class="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <%= link_to @document.project.name, @document.project, class: "ml-4 hover:font-bold" %>
-          </div>
-        </li>
-        <li>
-          <div class="flex items-center">
-            <svg class="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="ml-4 font-medium"><%= @document.title %></span>
-          </div>
-        </li>
-      </ol>
-    </nav>
-  </div>
-
   <div class="py-4 border-b border-gray-500">
     <div class="flex items-center justify-between">
       <div>
