@@ -11,18 +11,10 @@ module MarqoIndexing
   def sync_to_marqo
     return unless persisted?
 
-    begin
-      MarqoService.new(marqo_index_name).add_document(to_marqo_document, marqo_tensor_fields)
-    rescue => e
-      Rails.logger.error "Failed to sync #{self.class.name.downcase} #{id} to Marqo: #{e.message}"
-    end
+    MarqoSyncJob.perform_later(self.class.name, id)
   end
 
   def remove_from_marqo
-    begin
-      MarqoService.new(marqo_index_name).delete_document(id)
-    rescue => e
-      Rails.logger.error "Failed to remove #{self.class.name.downcase} #{id} from Marqo: #{e.message}"
-    end
+    MarqoRemoveJob.perform_later(self.class.name, id, marqo_index_name)
   end
 end
