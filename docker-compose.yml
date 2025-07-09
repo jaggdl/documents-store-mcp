@@ -38,6 +38,7 @@ services:
     volumes:
       - ./db:/rails/db
       - ./storage:/rails/storage
+      - ./public/documents:/rails/public/documents
 
 networks:
   app_network:
