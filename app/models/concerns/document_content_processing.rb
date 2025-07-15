@@ -59,7 +59,7 @@ module DocumentContentProcessing
       input_file.write(mermaid_code)
       input_file.close
 
-      command = "mmdc -i #{input_file.path} -o #{output_file.path} -t neutral -b white 2>&1"
+      command = "mmdc -i #{input_file.path} -o #{output_file.path} -t neutral -b white --puppeteerConfigFile /rails/puppeteer-config.json 2>&1"
       output = `#{command}`
       result = $?.success?
 

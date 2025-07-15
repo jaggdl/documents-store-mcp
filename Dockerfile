@@ -19,17 +19,28 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install Node.js and mermaid-cli
+# Install Node.js and Chrome dependencies
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install --no-install-recommends -y nodejs && \
+    apt-get install --no-install-recommends -y nodejs chromium \
+    fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 \
+    libgtk-3-0 libx11-xcb1 libxcomposite1 libxcursor1 libxdamage1 \
+    libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 \
+    libxtst6 ca-certificates fonts-liberation libappindicator1 \
+    libnss3 lsb-release xdg-utils && \
     npm install -g @mermaid-js/mermaid-cli && \
+    npx puppeteer browsers install chrome-headless-shell && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Create puppeteer configuration for mermaid-cli
+RUN echo '{"args": ["--no-sandbox", "--disable-setuid-sandbox"]}' > /rails/puppeteer-config.json
 
 # Set production environment
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+    BUNDLE_WITHOUT="development" \
+    PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium" \
+    PUPPETEER_ARGS="--no-sandbox --disable-setuid-sandbox"
 
 # Throw-away build stage to reduce size of final image
 FROM base AS build
@@ -63,6 +74,9 @@ FROM base
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
+
+# Create puppeteer configuration for mermaid-cli in final stage
+RUN echo '{"args": ["--no-sandbox", "--disable-setuid-sandbox"]}' > /rails/puppeteer-config.json
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
