@@ -53,12 +53,38 @@ class DocumentsController < ApplicationController
   end
 
   def edit
+    add_breadcrumb("Projects", projects_path)
+    add_breadcrumb(@document.project.name, @document.project)
+    add_breadcrumb(@document.title, [ @document.project, @document ])
+    add_breadcrumb("Edit")
+    @project = @document.project
+    @projects = Project.all
   end
 
   def update
-    if @document.update(document_params)
-      redirect_to @document, notice: "Document was successfully updated."
+    # debugger
+    if params[:project_option] == "new"
+      @project = Project.new(project_params)
+      if @project.save
+        @document.project = @project
+      else
+        @projects = Project.all
+        @document.valid?
+        render :edit and return
+      end
+    elsif params[:project_id] && params[:project_id] != @document.project.id.to_s
+      @project = Project.find(params[:project_id])
+      @document.project = @project
+    end
+
+    @document.assign_attributes(document_params)
+
+    if @document.save
+      @document.content = document_params[:content]
+      redirect_to [ @document.project, @document ], notice: "Document was successfully updated."
     else
+      @project = @document.project
+      @projects = Project.all
       render :edit
     end
   end

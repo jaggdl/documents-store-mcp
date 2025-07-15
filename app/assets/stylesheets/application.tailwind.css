@@ -2,12 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 @plugin "@tailwind/typography";
-/*
 
 @layer components {
-  .btn-primary {
-    @apply py-2 px-4 bg-blue-200;
+  .mermaid-diagram {
+    @apply my-6 text-center;
+  }
+  
+  .mermaid-diagram svg {
+    @apply max-w-full h-auto mx-auto;
+  }
+  
+  .mermaid-loading {
+    @apply text-gray-500 italic py-8;
+  }
+  
+  .mermaid-error {
+    @apply text-red-500 bg-red-100 p-4 rounded border border-red-300;
   }
 }
-
-*/
