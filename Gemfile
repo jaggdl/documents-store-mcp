@@ -69,5 +69,5 @@ gem "tailwindcss-ruby", "~> 3.4"
 
 gem "listen", "~> 3.0"
 
-gem "marksmith", "~> 0.4.5"
+gem "marksmith", "~> 0.4.6"
 gem "commonmarker", "~> 2.3"
